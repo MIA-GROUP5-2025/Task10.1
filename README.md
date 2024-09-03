@@ -9,6 +9,7 @@ This project aims to enhance a TurtleBot3 by deploying its simulation on Gazebo,
 - Gazebo
 - RVIZ
 - rqt_multiplot
+- rqt
 
 ## Steps
 
@@ -79,32 +80,32 @@ you will need to modify your turtlebot3's associated .xarco file to include nois
 3. **Add noise to the IMU sensor**
    ```xml
    <gazebo>
-    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
-      <alwaysOn>true</alwaysOn>
-      <bodyName>imu_link</bodyName>
-      <frameName>imu_link</frameName>
-      <topicName>imu</topicName>
-      <serviceName>imu_service</serviceName>
-      <gaussianNoise>0.1</gaussianNoise>
-      <updateRate>0</updateRate>
-      <imu>
-        <angular_velocity>
+  <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+    <alwaysOn>true</alwaysOn>
+    <bodyName>imu_link</bodyName>
+    <frameName>imu_link</frameName>
+    <topicName>imu</topicName>
+    <serviceName>imu_service</serviceName>
+    <gaussianNoise>0.5</gaussianNoise>
+    <updateRate>1000</updateRate> 
+    <imu>
+      <angular_velocity>
         <x>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </x>
         <y>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </y>
         <z>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </z>
       </angular_velocity>
@@ -112,25 +113,26 @@ you will need to modify your turtlebot3's associated .xarco file to include nois
         <x>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </x>
         <y>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </y>
         <z>
           <noise type="gaussian">
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>2.0</stddev>
           </noise>
         </z>
       </linear_acceleration>
-     </imu>
-    </plugin>
-   </gazebo>
+    </imu>
+  </plugin>
+</gazebo>
+
 4. **Rebuild the workspace and relaunch the node**
    ```bash
    cd ~/catkin_ws
@@ -164,5 +166,31 @@ After implementing kalman filter:
 ![afterkalmanfilter](https://github.com/user-attachments/assets/7cc769c5-8c62-47f9-9f56-476fc6552702)
 
 ### 6. Visualize the filtered data
+1. **To install `rqt`:**
+   * Open terminal.
+   * Update your package list to ensure you have the latest information and install rqt using the following command::
+   ```bash
+   sudo apt update
+   sudo apt install ros-noetic-rqt
+2. **Run** `rqt` by simply typing `rqt` in your terminal.
+   >**Problem:** When running `rqt_multiplot`, the window that opened wasn't responding.
+3. **Load the** `rqt_multiplot` **plugin:**
+    * Go to `Plugins` > `Visualization` > `Multiplot`.
+4.  **Click on the ⚙️ button to choose a configuration.**
+5. **Add a new plot:**
+    * Choose Title
+    * Select the topic `/imu_yaw_deg` for the y-axis.
+    * Select `data` for the field.
+    * For the x-axis, tick `Message Receipt Time`
+    * Select `Okay`.
+6. **Add new plot: **
+    * Repeat the process.
+    * Select the topic `/filtered_yaw` for the y-axis.
+7. **Run the graph**
+    * Select the ▶️ button.
+
+### Saving and Loading Configurations
+* **Save configuration:** Click on `Save Configuration`.
+* **Load configuration:** Click on `Open Configuration`.
 
    
